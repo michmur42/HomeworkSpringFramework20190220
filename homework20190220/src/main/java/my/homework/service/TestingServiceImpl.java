@@ -27,7 +27,8 @@ public class TestingServiceImpl implements TestingService {
         int num = 0;
         int succsess = 0;
         int fail = 0;
-
+        System.out.print("Введите ФИО (для ввода нажмите Enter):");
+        String personInfo =new Scanner(System.in).next();
         for (Question question : questions){
             num++;
             StringBuilder sb = new StringBuilder();

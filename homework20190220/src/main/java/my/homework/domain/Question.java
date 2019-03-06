@@ -7,10 +7,20 @@ import java.util.List;
 
 public class Question {
     @CsvBindByPosition(position = 0)
-    private Integer id;
+    private String language;
     @CsvBindByPosition(position = 1)
+    private Integer id;
+    @CsvBindByPosition(position = 2)
     private String text;
     private List<Answer> answers;
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
 
     public Integer getId() {
         return id;

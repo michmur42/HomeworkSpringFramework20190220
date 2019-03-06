@@ -4,11 +4,21 @@ import com.opencsv.bean.CsvBindByPosition;
 
 public class Answer {
     @CsvBindByPosition(position = 0)
-    private Integer questionId;
+    private String language;
     @CsvBindByPosition(position = 1)
-    private String text;
+    private Integer questionId;
     @CsvBindByPosition(position = 2)
+    private String text;
+    @CsvBindByPosition(position = 3)
     private Boolean flag;
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
 
     public Integer getQuestionId() {
         return questionId;

@@ -2,13 +2,16 @@ package my.homework.service;
 
 import my.homework.dao.QuestionDAO;
 import my.homework.domain.Question;
+import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Stream;
 
+@Service
 public class TestingServiceImpl implements TestingService {
 
     private final QuestionDAO questionDAO;
@@ -20,16 +23,15 @@ public class TestingServiceImpl implements TestingService {
         this.messageService = messageService;
     }
 
-    public void init(){
-        this.questions = questionDAO.getQuestions();
-    }
-    public void start() {
+    public void start(Locale locale) {
+        this.questions = questionDAO.getQuestions(locale);
+        Assert.notEmpty(questions,messageService.getMessage("error.locale.notfound"));
         int num = 0;
         int succsess = 0;
         int fail = 0;
         System.out.print("Введите ФИО (для ввода нажмите Enter):");
-        String personInfo =new Scanner(System.in).next();
-        for (Question question : questions){
+        String personInfo = new Scanner(System.in).next();
+        for (Question question : questions) {
             num++;
             StringBuilder sb = new StringBuilder();
             sb.append("-------------------------------------------------------------------------------------\n");
@@ -37,40 +39,42 @@ public class TestingServiceImpl implements TestingService {
             sb.append(question.getText());
             sb.append("\nВозможные ответы:\n");
             AtomicInteger incr = new AtomicInteger(0);
-            question.getAnswers().stream().forEach(a->{
+            question.getAnswers().stream().forEach(a -> {
                 incr.incrementAndGet();
-                sb.append(MessageFormat.format("{0} - {1}\n",incr.get(), a.getText()).toString());
+                sb.append(MessageFormat.format("{0} - {1}\n", incr.get(), a.getText()));
             });
             sb.append("\n Выберите ответ. Укажите номер варианта и нажмите Enter. (q-завершить тестирование):");
             System.out.println(sb.toString());
             Scanner scanner = new Scanner(System.in);
             boolean checker = true;
-            while (checker){
+            while (checker) {
                 String inputValue = scanner.next();
-                if ("q".equals(inputValue)){
+                if ("q".equals(inputValue)) {
                     return;
                 }
-                try{
+                try {
                     Integer n = Integer.parseInt(inputValue);
-                    if (n<1 || n>incr.get()){
+                    if (n < 1 || n > incr.get()) {
                         System.out.println("Некорректный ответ. Попробуйте снова:");
                     } else {
-                        if (question.getAnswers().get(n-1).getFlag()){
+                        if (question.getAnswers().get(n - 1).getFlag()) {
                             succsess++;
                         } else {
                             fail++;
                         }
                         checker = false;
                     }
-                } catch (Exception e){
+                } catch (Exception e) {
                     System.out.println("Некорректный ответ. Попробуйте снова:");
                 }
             }
         }
         StringBuilder res = new StringBuilder();
         res.append("--------------- РЕЗУЛЬТАТ ---------------\n");
-        res.append("Количество правильных ответов: " + succsess); res.append("\n");
-        res.append("Количество неправильных ответов: " + fail); res.append("\n");
+        res.append("Количество правильных ответов: " + succsess);
+        res.append("\n");
+        res.append("Количество неправильных ответов: " + fail);
+        res.append("\n");
         System.out.println(res.toString());
     }
 }

@@ -1,61 +1,32 @@
 package my.homework.domain;
 
-import com.opencsv.bean.CsvBindByPosition;
-
+/**
+ * Ответ пользователя
+ */
 public class Answer {
     /**
-     * Язык
+     * Вопрос
      */
-    @CsvBindByPosition(position = 0)
-    private String language;
+    private Question question;
 
     /**
-     * Идентификатор вопроса
+     * Выбор пользователя
      */
-    @CsvBindByPosition(position = 1)
-    private Integer questionId;
+    private Option choice;
 
-    /**
-     * Текст варианта
-     */
-    @CsvBindByPosition(position = 2)
-    private String text;
-
-    /**
-     * Признак корректности ответа
-     */
-    @CsvBindByPosition(position = 3)
-    private Boolean flag;
-
-    public String getLanguage() {
-        return language;
+    public Question getQuestion() {
+        return question;
     }
 
-    public void setLanguage(String language) {
-        this.language = language;
+    public void setQuestion(Question question) {
+        this.question = question;
     }
 
-    public Integer getQuestionId() {
-        return questionId;
+    public Option getChoice() {
+        return choice;
     }
 
-    public void setQuestionId(Integer questionId) {
-        this.questionId = questionId;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public Boolean getFlag() {
-        return flag;
-    }
-
-    public void setFlag(Boolean flag) {
-        this.flag = flag;
+    public void setChoice(Option choice) {
+        this.choice = choice;
     }
 }

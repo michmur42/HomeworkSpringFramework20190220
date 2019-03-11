@@ -2,6 +2,7 @@ package my.homework;
 
 import my.homework.dao.FileQuestionsDAOImpl;
 import my.homework.dao.QuestionDAO;
+import my.homework.domain.Answer;
 import my.homework.service.MessageServiceImpl;
 import my.homework.service.TestingService;
 import org.springframework.context.MessageSource;
@@ -9,6 +10,8 @@ import org.springframework.context.annotation.*;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+
+import java.util.List;
 
 
 @Configuration
@@ -19,7 +22,8 @@ public class Application {
     public static void main(String[] args) {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Application.class);
         TestingService testingService = context.getBean(TestingService.class);
-        testingService.start();
+        List<Answer> history = testingService.start();
+        testingService.validate(history);
     }
 
     @Bean
@@ -31,9 +35,9 @@ public class Application {
     }
 
     @Bean
-    public QuestionDAO questionDAO(MessageServiceImpl messageService){
+    public QuestionDAO questionDAO(MessageServiceImpl messageService) {
         Resource questions = new ClassPathResource("questions.csv");
-        Resource answers = new ClassPathResource("answers.csv");
+        Resource answers = new ClassPathResource("options.csv");
         return new FileQuestionsDAOImpl(messageService, questions, answers);
     }
 }

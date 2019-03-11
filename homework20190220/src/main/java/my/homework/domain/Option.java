@@ -2,13 +2,10 @@ package my.homework.domain;
 
 import com.opencsv.bean.CsvBindByPosition;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * Вопрос
+ * Вариант ответа
  */
-public class Question {
+public class Option {
     /**
      * Язык
      */
@@ -19,18 +16,19 @@ public class Question {
      * Идентификатор вопроса
      */
     @CsvBindByPosition(position = 1)
-    private Integer id;
+    private Integer questionId;
 
     /**
-     * Текс вопроса
+     * Текст варианта
      */
     @CsvBindByPosition(position = 2)
     private String text;
 
     /**
-     * Варианты ответов
+     * Признак корректности ответа
      */
-    private List<Option> options;
+    @CsvBindByPosition(position = 3)
+    private Boolean flag;
 
     public String getLanguage() {
         return language;
@@ -40,12 +38,12 @@ public class Question {
         this.language = language;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getQuestionId() {
+        return questionId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setQuestionId(Integer questionId) {
+        this.questionId = questionId;
     }
 
     public String getText() {
@@ -56,14 +54,11 @@ public class Question {
         this.text = text;
     }
 
-    public List<Option> getOptions() {
-        if (this.options == null) {
-            this.options = new ArrayList<Option>();
-        }
-        return this.options;
+    public Boolean getFlag() {
+        return flag;
     }
 
-    public void setOptions(List<Option> options) {
-        this.options = options;
+    public void setFlag(Boolean flag) {
+        this.flag = flag;
     }
 }

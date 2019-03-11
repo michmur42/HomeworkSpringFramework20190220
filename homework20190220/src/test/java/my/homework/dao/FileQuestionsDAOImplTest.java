@@ -29,7 +29,7 @@ class FileQuestionsDAOImplTest {
     @Test
     void getQuestionsSuccsess() {
         Resource questions = new ClassPathResource("questions.csv");
-        Resource answers = new ClassPathResource("answers.csv");
+        Resource answers = new ClassPathResource("options.csv");
         when(messageService.getMessage("error.parse.csvfile")).thenReturn("Error parse CSV file");
         fileQuestionsDAO = new FileQuestionsDAOImpl(messageService, questions, answers);
         assertEquals(1, fileQuestionsDAO.getQuestions(new Locale("ru")).size());

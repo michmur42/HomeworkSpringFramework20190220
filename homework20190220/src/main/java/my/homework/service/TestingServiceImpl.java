@@ -1,81 +1,61 @@
 package my.homework.service;
 
 import my.homework.dao.QuestionDAO;
+import my.homework.domain.Answer;
 import my.homework.domain.Question;
+import my.homework.exception.StopException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class TestingServiceImpl implements TestingService {
 
+    private final QuestionService questionService;
+    private final QuestionDAO questionDAO;
+    private Locale locale;
+    private List<Question> questions;
+    private MessageService messageService;
 
-  private final QuestionDAO questionDAO;
-  @Value("${application.language}")
-  private String language;
-  private Locale locale;
-  private List<Question> questions;
-  private MessageService messageService;
 
-  public TestingServiceImpl(QuestionDAO questionDAO, MessageService messageService) {
-    this.questionDAO = questionDAO;
-    this.messageService = messageService;
-    this.locale = new Locale(language);
-  }
-
-  public void start() {
-    this.questions = questionDAO.getQuestions(locale);
-    Assert.notEmpty(questions, messageService.getMessage("error.data.notfound"));
-    int num = 0;
-    int succsess = 0;
-    int fail = 0;
-    System.out.print(messageService.getMessage("test.user.enter"));
-    String personInfo = new Scanner(System.in).next();
-    for (Question question : questions) {
-      num++;
-      StringBuilder sb = new StringBuilder();
-      System.out.println("-------------------------------------------------------------------------------------");
-      System.out.println(MessageFormat.format(messageService.getMessage("test.question.label"), num));
-      System.out.println(question.getText());
-      System.out.println(messageService.getMessage("test.answers.label"));
-      AtomicInteger incr = new AtomicInteger(0);
-      question.getAnswers().stream().forEach(a -> {
-        incr.incrementAndGet();
-        System.out.println(MessageFormat.format("{0} - {1}", incr.get(), a.getText()));
-      });
-      System.out.println(messageService.getMessage("test.answer.choice"));
-      Scanner scanner = new Scanner(System.in);
-      boolean checker = true;
-      while (checker) {
-        String inputValue = scanner.next();
-        if ("q".equals(inputValue)) {
-          return;
-        }
-        try {
-          Integer n = Integer.parseInt(inputValue);
-          if (n < 1 || n > incr.get()) {
-            System.out.print(messageService.getMessage("test.answer.retry"));
-          } else {
-            if (question.getAnswers().get(n - 1).getFlag()) {
-              succsess++;
-            } else {
-              fail++;
-            }
-            checker = false;
-          }
-        } catch (Exception e) {
-          System.out.print(messageService.getMessage("test.answer.retry"));
-        }
-      }
+    public TestingServiceImpl(@Value("${application.language}") String language, QuestionDAO questionDAO, QuestionService questionService, MessageService messageService) {
+        this.questionDAO = questionDAO;
+        this.messageService = messageService;
+        this.locale = new Locale(language);
+        this.questionService = questionService;
     }
-    System.out.println(messageService.getMessage("test.result.label"));
-    System.out.println(MessageFormat.format(messageService.getMessage("test.count.success"), succsess));
-    System.out.println(MessageFormat.format(messageService.getMessage("test.count.fail"), fail));
-  }
+
+    public List<Answer> start() {
+        this.questions = questionDAO.getQuestions(locale);
+        Assert.notEmpty(questions, messageService.getMessage("message.error.data"));
+        System.out.print(messageService.getMessage("prompt.user"));
+        String userName = new Scanner(System.in).next();
+        List<Answer> history = new ArrayList<>();
+        for (Question question : questions) {
+            try {
+                history.add(questionService.doAsk(question));
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage(), e);
+            } catch (StopException e) {
+                System.out.println(messageService.getMessage("message.stop"));
+                System.exit(0);
+            }
+        }
+        return history;
+    }
+
+    public void validate(List<Answer> history) {
+        long success = history.stream().filter(answer -> answer.getChoice().getFlag()).count();
+        long fail = history.stream().filter(answer -> !answer.getChoice().getFlag()).count();
+        System.out.println();
+        System.out.println(MessageFormat.format(messageService.getMessage("prompt.success"), success));
+        System.out.println(MessageFormat.format(messageService.getMessage("prompt.fail"), fail));
+    }
 }

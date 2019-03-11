@@ -1,6 +1,6 @@
 package my.homework.dao;
 
-import my.homework.domain.Answer;
+import my.homework.domain.Option;
 import my.homework.domain.Question;
 import my.homework.service.MessageServiceImpl;
 import my.homework.util.CSVHelper;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 /**
  * Данный класс реализует интерфейс QuestionDAO и предоставляет доступ к списку вопросов
- * и ответов из файлов questions.csv и answers.csv находящихся в classpath
+ * и ответов из файлов questions.csv и options.csv находящихся в classpath
  */
 public class FileQuestionsDAOImpl implements QuestionDAO {
 
@@ -32,7 +32,7 @@ public class FileQuestionsDAOImpl implements QuestionDAO {
      */
     private MessageServiceImpl messageService;
 
-    public FileQuestionsDAOImpl(MessageServiceImpl messageService, Resource questionResource, Resource answerResource ) {
+    public FileQuestionsDAOImpl(MessageServiceImpl messageService, Resource questionResource, Resource answerResource) {
         this.questionResource = questionResource;
         this.answerResource = answerResource;
         this.messageService = messageService;
@@ -46,16 +46,16 @@ public class FileQuestionsDAOImpl implements QuestionDAO {
      */
     public List<Question> getQuestions(Locale locale) {
         try {
-            List<Answer> answers = CSVHelper.readFromCSV(answerResource, Answer.class);
+            List<Option> options = CSVHelper.readFromCSV(answerResource, Option.class);
             return CSVHelper.readFromCSV(questionResource, Question.class).stream()
                     .filter(q -> locale.getLanguage().equals(q.getLanguage()))
-                    .peek(q -> q.setAnswers(answers.stream()
+                    .peek(q -> q.setOptions(options.stream()
                             .filter(a -> locale.getLanguage().equals(locale.getLanguage()))
                             .filter(a -> a.getQuestionId().equals(q.getId()))
                             .collect(Collectors.toList())))
                     .collect(Collectors.toList());
         } catch (IOException e) {
-            throw new RuntimeException(messageService.getMessage("error.parse.csvfile"), e);
+            throw new RuntimeException(messageService.getMessage("message.error.parse"), e);
         }
     }
 }

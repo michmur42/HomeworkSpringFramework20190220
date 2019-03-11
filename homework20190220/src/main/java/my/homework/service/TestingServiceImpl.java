@@ -2,6 +2,7 @@ package my.homework.service;
 
 import my.homework.dao.QuestionDAO;
 import my.homework.domain.Question;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -14,37 +15,38 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Service
 public class TestingServiceImpl implements TestingService {
 
+    private final Locale locale;
     private final QuestionDAO questionDAO;
     private List<Question> questions;
     private MessageService messageService;
 
-    public TestingServiceImpl(QuestionDAO questionDAO, MessageService messageService) {
+    public TestingServiceImpl(QuestionDAO questionDAO, MessageService messageService, Environment environment) {
         this.questionDAO = questionDAO;
         this.messageService = messageService;
+        this.locale = new Locale(environment.getProperty("application.language"));
     }
 
-    public void start(Locale locale) {
+    public void start() {
         this.questions = questionDAO.getQuestions(locale);
-        Assert.notEmpty(questions,messageService.getMessage("error.locale.notfound"));
+        Assert.notEmpty(questions, messageService.getMessage("error.data.notfound"));
         int num = 0;
         int succsess = 0;
         int fail = 0;
-        System.out.print("Введите ФИО (для ввода нажмите Enter):");
+        System.out.print(messageService.getMessage("test.user.enter"));
         String personInfo = new Scanner(System.in).next();
         for (Question question : questions) {
             num++;
             StringBuilder sb = new StringBuilder();
-            sb.append("-------------------------------------------------------------------------------------\n");
-            sb.append("Вопрос #" + num + ":\n");
-            sb.append(question.getText());
-            sb.append("\nВозможные ответы:\n");
+            System.out.println("-------------------------------------------------------------------------------------");
+            System.out.println(MessageFormat.format(messageService.getMessage("test.question.label"), num));
+            System.out.println(question.getText());
+            System.out.println(messageService.getMessage("test.answers.label"));
             AtomicInteger incr = new AtomicInteger(0);
             question.getAnswers().stream().forEach(a -> {
                 incr.incrementAndGet();
-                sb.append(MessageFormat.format("{0} - {1}\n", incr.get(), a.getText()));
+                System.out.println(MessageFormat.format("{0} - {1}", incr.get(), a.getText()));
             });
-            sb.append("\n Выберите ответ. Укажите номер варианта и нажмите Enter. (q-завершить тестирование):");
-            System.out.println(sb.toString());
+            System.out.println(messageService.getMessage("test.answer.choice"));
             Scanner scanner = new Scanner(System.in);
             boolean checker = true;
             while (checker) {
@@ -55,7 +57,7 @@ public class TestingServiceImpl implements TestingService {
                 try {
                     Integer n = Integer.parseInt(inputValue);
                     if (n < 1 || n > incr.get()) {
-                        System.out.println("Некорректный ответ. Попробуйте снова:");
+                        System.out.print(messageService.getMessage("test.answer.retry"));
                     } else {
                         if (question.getAnswers().get(n - 1).getFlag()) {
                             succsess++;
@@ -65,16 +67,12 @@ public class TestingServiceImpl implements TestingService {
                         checker = false;
                     }
                 } catch (Exception e) {
-                    System.out.println("Некорректный ответ. Попробуйте снова:");
+                    System.out.print(messageService.getMessage("test.answer.retry"));
                 }
             }
         }
-        StringBuilder res = new StringBuilder();
-        res.append("--------------- РЕЗУЛЬТАТ ---------------\n");
-        res.append("Количество правильных ответов: " + succsess);
-        res.append("\n");
-        res.append("Количество неправильных ответов: " + fail);
-        res.append("\n");
-        System.out.println(res.toString());
+        System.out.println(messageService.getMessage("test.result.label"));
+        System.out.println(MessageFormat.format(messageService.getMessage("test.count.success"), succsess));
+        System.out.println(MessageFormat.format(messageService.getMessage("test.count.fail"), fail));
     }
 }

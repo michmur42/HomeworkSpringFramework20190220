@@ -3,12 +3,27 @@ package my.homework.domain;
 import com.opencsv.bean.CsvBindByPosition;
 
 public class Answer {
+    /**
+     * Язык
+     */
     @CsvBindByPosition(position = 0)
     private String language;
+
+    /**
+     * Идентификатор вопроса
+     */
     @CsvBindByPosition(position = 1)
     private Integer questionId;
+
+    /**
+     * Текст варианта
+     */
     @CsvBindByPosition(position = 2)
     private String text;
+
+    /**
+     * Признак корректности ответа
+     */
     @CsvBindByPosition(position = 3)
     private Boolean flag;
 

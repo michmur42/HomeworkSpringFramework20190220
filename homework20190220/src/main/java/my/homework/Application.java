@@ -1,25 +1,28 @@
 package my.homework;
 
+import my.homework.dao.FileQuestionsDAOImpl;
+import my.homework.dao.QuestionDAO;
+import my.homework.service.MessageService;
 import my.homework.service.TestingService;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.*;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Repository;
 
-import java.util.Locale;
 
 @Configuration
 @ComponentScan
+@PropertySource("classpath:/application.properties")
 public class Application {
 
     public static void main(String[] args) {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Application.class);
         TestingService testingService = context.getBean(TestingService.class);
-        testingService.start(new Locale("ru"));
+        testingService.start();
     }
 
     @Bean
@@ -31,12 +34,9 @@ public class Application {
     }
 
     @Bean
-    public Resource questionResource() {
-        return new ClassPathResource("questions.csv");
-    }
-
-    @Bean
-    public Resource answerResource() {
-        return new ClassPathResource("answers.csv");
+    public QuestionDAO questionDAO(MessageService messageService){
+        Resource questions = new ClassPathResource("questions.csv");
+        Resource answers = new ClassPathResource("answers.csv");
+        return new FileQuestionsDAOImpl(messageService, questions, answers);
     }
 }

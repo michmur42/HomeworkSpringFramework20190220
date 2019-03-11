@@ -6,12 +6,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Question {
+    /**
+     * Язык
+     */
     @CsvBindByPosition(position = 0)
     private String language;
+
+    /**
+     * Идентификатор вопроса
+     */
     @CsvBindByPosition(position = 1)
     private Integer id;
+
+    /**
+     * Текс вопроса
+     */
     @CsvBindByPosition(position = 2)
     private String text;
+
+    /**
+     * Варианты ответов
+     */
     private List<Answer> answers;
 
     public String getLanguage() {
@@ -39,7 +54,7 @@ public class Question {
     }
 
     public List<Answer> getAnswers() {
-        if (this.answers == null){
+        if (this.answers == null) {
             this.answers = new ArrayList<Answer>();
         }
         return this.answers;

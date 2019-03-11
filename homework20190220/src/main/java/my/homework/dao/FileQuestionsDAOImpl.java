@@ -2,11 +2,9 @@ package my.homework.dao;
 
 import my.homework.domain.Answer;
 import my.homework.domain.Question;
-import my.homework.service.MessageService;
+import my.homework.service.MessageServiceImpl;
 import my.homework.util.CSVHelper;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,9 +30,9 @@ public class FileQuestionsDAOImpl implements QuestionDAO {
     /**
      * Сервис для работы с message bundle
      */
-    private MessageService messageService;
+    private MessageServiceImpl messageService;
 
-    public FileQuestionsDAOImpl(MessageService messageService, Resource questionResource, Resource answerResource ) {
+    public FileQuestionsDAOImpl(MessageServiceImpl messageService, Resource questionResource, Resource answerResource ) {
         this.questionResource = questionResource;
         this.answerResource = answerResource;
         this.messageService = messageService;

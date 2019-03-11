@@ -2,16 +2,13 @@ package my.homework;
 
 import my.homework.dao.FileQuestionsDAOImpl;
 import my.homework.dao.QuestionDAO;
-import my.homework.service.MessageService;
+import my.homework.service.MessageServiceImpl;
 import my.homework.service.TestingService;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Repository;
 
 
 @Configuration
@@ -34,7 +31,7 @@ public class Application {
     }
 
     @Bean
-    public QuestionDAO questionDAO(MessageService messageService){
+    public QuestionDAO questionDAO(MessageServiceImpl messageService){
         Resource questions = new ClassPathResource("questions.csv");
         Resource answers = new ClassPathResource("answers.csv");
         return new FileQuestionsDAOImpl(messageService, questions, answers);

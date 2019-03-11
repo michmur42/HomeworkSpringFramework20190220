@@ -1,6 +1,6 @@
 package my.homework.dao;
 
-import my.homework.service.MessageService;
+import my.homework.service.MessageServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -14,7 +14,7 @@ import static org.mockito.Mockito.when;
 
 class FileQuestionsDAOImplTest {
 
-    private MessageService messageService = mock(MessageService.class);
+    private MessageServiceImpl messageService = mock(MessageServiceImpl.class);
     private FileQuestionsDAOImpl fileQuestionsDAO;
 
     @Test

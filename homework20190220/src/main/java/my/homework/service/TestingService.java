@@ -7,15 +7,15 @@ import java.io.IOException;
 import java.util.List;
 
 public interface TestingService {
-    /**
-     * Метод начинает процесс тестирование
-     */
-    List<Answer> start() throws IOException, StopException;
+  /**
+   * Метод начинает процесс тестирование
+   */
+  List<Answer> start() throws IOException, StopException;
 
-    /**
-     * Метод осущевствлят проверку результатов тестирования
-     *
-     * @param history История тестирования
-     */
-    void validate(List<Answer> history);
+  /**
+   * Метод осущевствлят проверку результатов тестирования
+   *
+   * @param history История тестирования
+   */
+  void validate(List<Answer> history);
 }

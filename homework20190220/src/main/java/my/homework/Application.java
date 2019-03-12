@@ -21,31 +21,31 @@ import java.util.List;
 @PropertySource("classpath:/application.properties")
 public class Application {
 
-    public static void main(String[] args) {
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Application.class);
-        TestingService testingService = context.getBean(TestingService.class);
-        try{
-            List<Answer> history = testingService.start();
-            testingService.validate(history);
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        } catch (StopException e) {
-            System.exit(0);
-        }
+  public static void main(String[] args) {
+    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Application.class);
+    TestingService testingService = context.getBean(TestingService.class);
+    try {
+      List<Answer> history = testingService.start();
+      testingService.validate(history);
+    } catch (IOException e) {
+      throw new RuntimeException(e.getMessage(), e);
+    } catch (StopException e) {
+      System.exit(0);
     }
+  }
 
-    @Bean
-    public MessageSource messageSource() {
-        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasenames("messages");
-        messageSource.setDefaultEncoding("UTF-8");
-        return messageSource;
-    }
+  @Bean
+  public MessageSource messageSource() {
+    ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+    messageSource.setBasenames("messages");
+    messageSource.setDefaultEncoding("UTF-8");
+    return messageSource;
+  }
 
-    @Bean
-    public QuestionDAO questionDAO(MessageServiceImpl messageService) {
-        Resource questions = new ClassPathResource("questions.csv");
-        Resource answers = new ClassPathResource("options.csv");
-        return new FileQuestionsDAOImpl(messageService, questions, answers);
-    }
+  @Bean
+  public QuestionDAO questionDAO(MessageServiceImpl messageService) {
+    Resource questions = new ClassPathResource("questions.csv");
+    Resource answers = new ClassPathResource("options.csv");
+    return new FileQuestionsDAOImpl(messageService, questions, answers);
+  }
 }

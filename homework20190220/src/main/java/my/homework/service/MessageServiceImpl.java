@@ -8,18 +8,18 @@ import org.springframework.util.Assert;
 import java.util.Locale;
 
 @Service
-public class MessageServiceImpl implements MessageService{
+public class MessageServiceImpl implements MessageService {
 
-    private MessageSource messageSource;
-    private Locale locale;
+  private MessageSource messageSource;
+  private Locale locale;
 
-    public MessageServiceImpl(@Value("${application.language}") String language, MessageSource messageSource) {
-        this.messageSource = messageSource;
-        this.locale = new Locale(language);
-    }
+  public MessageServiceImpl(@Value("${application.language}") String language, MessageSource messageSource) {
+    this.messageSource = messageSource;
+    this.locale = new Locale(language);
+  }
 
-    public String getMessage(String code) {
-       Assert.notNull(code, "Illegal argument value");
-       return messageSource.getMessage(code, null, locale);
-    }
+  public String getMessage(String code) {
+    Assert.notNull(code, "Illegal argument value");
+    return messageSource.getMessage(code, null, locale);
+  }
 }

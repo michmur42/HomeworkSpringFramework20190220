@@ -17,45 +17,45 @@ import java.util.stream.Collectors;
  */
 public class FileQuestionsDAOImpl implements QuestionDAO {
 
-    /**
-     * Файл с вопросами
-     */
-    private final Resource questionResource;
+  /**
+   * Файл с вопросами
+   */
+  private final Resource questionResource;
 
-    /**
-     * Файл с ответами
-     */
-    private final Resource answerResource;
+  /**
+   * Файл с ответами
+   */
+  private final Resource answerResource;
 
-    /**
-     * Сервис для работы с message bundle
-     */
-    private MessageServiceImpl messageService;
+  /**
+   * Сервис для работы с message bundle
+   */
+  private MessageServiceImpl messageService;
 
-    public FileQuestionsDAOImpl(MessageServiceImpl messageService, Resource questionResource, Resource answerResource) {
-        this.questionResource = questionResource;
-        this.answerResource = answerResource;
-        this.messageService = messageService;
+  public FileQuestionsDAOImpl(MessageServiceImpl messageService, Resource questionResource, Resource answerResource) {
+    this.questionResource = questionResource;
+    this.answerResource = answerResource;
+    this.messageService = messageService;
+  }
+
+  /**
+   * Возвращает список с вопросами и ответами
+   *
+   * @param locale локализация
+   * @return список вопросов
+   */
+  public List<Question> getQuestions(Locale locale) {
+    try {
+      List<Option> options = CSVHelper.readFromCSV(answerResource, Option.class);
+      return CSVHelper.readFromCSV(questionResource, Question.class).stream()
+              .filter(q -> locale.getLanguage().equals(q.getLanguage()))
+              .peek(q -> q.setOptions(options.stream()
+                      .filter(a -> locale.getLanguage().equals(locale.getLanguage()))
+                      .filter(a -> a.getQuestionId().equals(q.getId()))
+                      .collect(Collectors.toList())))
+              .collect(Collectors.toList());
+    } catch (IOException e) {
+      throw new RuntimeException(messageService.getMessage("message.error.parse"), e);
     }
-
-    /**
-     * Возвращает список с вопросами и ответами
-     *
-     * @param locale локализация
-     * @return список вопросов
-     */
-    public List<Question> getQuestions(Locale locale) {
-        try {
-            List<Option> options = CSVHelper.readFromCSV(answerResource, Option.class);
-            return CSVHelper.readFromCSV(questionResource, Question.class).stream()
-                    .filter(q -> locale.getLanguage().equals(q.getLanguage()))
-                    .peek(q -> q.setOptions(options.stream()
-                            .filter(a -> locale.getLanguage().equals(locale.getLanguage()))
-                            .filter(a -> a.getQuestionId().equals(q.getId()))
-                            .collect(Collectors.toList())))
-                    .collect(Collectors.toList());
-        } catch (IOException e) {
-            throw new RuntimeException(messageService.getMessage("message.error.parse"), e);
-        }
-    }
+  }
 }

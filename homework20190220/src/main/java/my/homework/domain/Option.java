@@ -6,59 +6,59 @@ import com.opencsv.bean.CsvBindByPosition;
  * Вариант ответа
  */
 public class Option {
-    /**
-     * Язык
-     */
-    @CsvBindByPosition(position = 0)
-    private String language;
+  /**
+   * Язык
+   */
+  @CsvBindByPosition(position = 0)
+  private String language;
 
-    /**
-     * Идентификатор вопроса
-     */
-    @CsvBindByPosition(position = 1)
-    private Integer questionId;
+  /**
+   * Идентификатор вопроса
+   */
+  @CsvBindByPosition(position = 1)
+  private Integer questionId;
 
-    /**
-     * Текст варианта
-     */
-    @CsvBindByPosition(position = 2)
-    private String text;
+  /**
+   * Текст варианта
+   */
+  @CsvBindByPosition(position = 2)
+  private String text;
 
-    /**
-     * Признак корректности ответа
-     */
-    @CsvBindByPosition(position = 3)
-    private Boolean flag;
+  /**
+   * Признак корректности ответа
+   */
+  @CsvBindByPosition(position = 3)
+  private Boolean flag;
 
-    public String getLanguage() {
-        return language;
-    }
+  public String getLanguage() {
+    return language;
+  }
 
-    public void setLanguage(String language) {
-        this.language = language;
-    }
+  public void setLanguage(String language) {
+    this.language = language;
+  }
 
-    public Integer getQuestionId() {
-        return questionId;
-    }
+  public Integer getQuestionId() {
+    return questionId;
+  }
 
-    public void setQuestionId(Integer questionId) {
-        this.questionId = questionId;
-    }
+  public void setQuestionId(Integer questionId) {
+    this.questionId = questionId;
+  }
 
-    public String getText() {
-        return text;
-    }
+  public String getText() {
+    return text;
+  }
 
-    public void setText(String text) {
-        this.text = text;
-    }
+  public void setText(String text) {
+    this.text = text;
+  }
 
-    public Boolean getFlag() {
-        return flag;
-    }
+  public Boolean getFlag() {
+    return flag;
+  }
 
-    public void setFlag(Boolean flag) {
-        this.flag = flag;
-    }
+  public void setFlag(Boolean flag) {
+    this.flag = flag;
+  }
 }

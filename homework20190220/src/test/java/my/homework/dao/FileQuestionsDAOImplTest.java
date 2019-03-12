@@ -14,24 +14,24 @@ import static org.mockito.Mockito.when;
 
 class FileQuestionsDAOImplTest {
 
-    private MessageServiceImpl messageService = mock(MessageServiceImpl.class);
-    private FileQuestionsDAOImpl fileQuestionsDAO;
+  private MessageServiceImpl messageService = mock(MessageServiceImpl.class);
+  private FileQuestionsDAOImpl fileQuestionsDAO;
 
-    @Test
-    void getQuestionsError() {
-        Resource questions = new ClassPathResource("dummy.csv");
-        Resource answers = new ClassPathResource("dummy.csv");
-        when(messageService.getMessage("error.parse.csvfile")).thenReturn("Error parse CSV file");
-        fileQuestionsDAO = new FileQuestionsDAOImpl(messageService, questions, answers);
-        assertThrows(RuntimeException.class, () -> fileQuestionsDAO.getQuestions(new Locale("ru")));
-    }
+  @Test
+  void getQuestionsError() {
+    Resource questions = new ClassPathResource("dummy.csv");
+    Resource answers = new ClassPathResource("dummy.csv");
+    when(messageService.getMessage("error.parse.csvfile")).thenReturn("Error parse CSV file");
+    fileQuestionsDAO = new FileQuestionsDAOImpl(messageService, questions, answers);
+    assertThrows(RuntimeException.class, () -> fileQuestionsDAO.getQuestions(new Locale("ru")));
+  }
 
-    @Test
-    void getQuestionsSuccsess() {
-        Resource questions = new ClassPathResource("questions.csv");
-        Resource answers = new ClassPathResource("options.csv");
-        when(messageService.getMessage("error.parse.csvfile")).thenReturn("Error parse CSV file");
-        fileQuestionsDAO = new FileQuestionsDAOImpl(messageService, questions, answers);
-        assertEquals(1, fileQuestionsDAO.getQuestions(new Locale("ru")).size());
-    }
+  @Test
+  void getQuestionsSuccsess() {
+    Resource questions = new ClassPathResource("questions.csv");
+    Resource answers = new ClassPathResource("options.csv");
+    when(messageService.getMessage("error.parse.csvfile")).thenReturn("Error parse CSV file");
+    fileQuestionsDAO = new FileQuestionsDAOImpl(messageService, questions, answers);
+    assertEquals(1, fileQuestionsDAO.getQuestions(new Locale("ru")).size());
+  }
 }

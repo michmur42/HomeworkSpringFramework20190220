@@ -14,11 +14,11 @@ import java.text.MessageFormat;
 @Service
 public class QuestionServiceImpl implements QuestionService {
   private final MessageService messageService;
-  private BufferedReader bufferedReader;
+  private final InputService inputService;
 
-  public QuestionServiceImpl(MessageService messageService) {
+  public QuestionServiceImpl(MessageService messageService, InputService inputService) {
     this.messageService = messageService;
-    this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+    this.inputService = inputService;
   }
 
   @Override
@@ -27,7 +27,7 @@ public class QuestionServiceImpl implements QuestionService {
     Answer answer = new Answer();
     answer.setQuestion(question);
     while (true) {
-      String in = bufferedReader.readLine();
+      String in = inputService.waitInput();
       try {
         if ("q".equals(in)) {
           throw new StopException();

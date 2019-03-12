@@ -20,23 +20,29 @@ public class TestingServiceImpl implements TestingService {
 
   private final QuestionService questionService;
   private final QuestionDAO questionDAO;
+  private final InputService inputService;
   private Locale locale;
   private List<Question> questions;
   private MessageService messageService;
 
 
-  public TestingServiceImpl(@Value("${application.language}") String language, QuestionDAO questionDAO, QuestionService questionService, MessageService messageService) {
+
+  public TestingServiceImpl(@Value("${application.language}") String language,
+                            QuestionDAO questionDAO,
+                            QuestionService questionService,
+                            MessageService messageService,
+                            InputService inputService) {
     this.questionDAO = questionDAO;
     this.messageService = messageService;
     this.locale = new Locale(language);
     this.questionService = questionService;
+    this.inputService = inputService;
   }
 
   public List<Answer> start() throws IOException, StopException {
     this.questions = questionDAO.getQuestions(locale);
     Assert.notEmpty(questions, messageService.getMessage("message.error.data"));
-    System.out.print(messageService.getMessage("prompt.user"));
-    String userName = new Scanner(System.in).next();
+    String userName = inputService.waitInput(messageService.getMessage("prompt.user"));
     List<Answer> history = new ArrayList<>();
     for (Question question : questions) {
       history.add(questionService.doAsk(question));

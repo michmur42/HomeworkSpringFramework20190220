@@ -32,21 +32,14 @@ public class TestingServiceImpl implements TestingService {
         this.questionService = questionService;
     }
 
-    public List<Answer> start() {
+    public List<Answer> start() throws IOException, StopException {
         this.questions = questionDAO.getQuestions(locale);
         Assert.notEmpty(questions, messageService.getMessage("message.error.data"));
         System.out.print(messageService.getMessage("prompt.user"));
         String userName = new Scanner(System.in).next();
         List<Answer> history = new ArrayList<>();
         for (Question question : questions) {
-            try {
                 history.add(questionService.doAsk(question));
-            } catch (IOException e) {
-                throw new RuntimeException(e.getMessage(), e);
-            } catch (StopException e) {
-                System.out.println(messageService.getMessage("message.stop"));
-                System.exit(0);
-            }
         }
         return history;
     }

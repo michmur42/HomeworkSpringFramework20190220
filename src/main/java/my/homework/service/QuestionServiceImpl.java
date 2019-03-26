@@ -6,9 +6,7 @@ import my.homework.domain.Question;
 import my.homework.exception.StopException;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.text.MessageFormat;
 
 @Service

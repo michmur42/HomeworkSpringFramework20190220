@@ -1,0 +1,5 @@
+application:
+  language: "ru"
+logging:
+  level:
+    root: "WARN"

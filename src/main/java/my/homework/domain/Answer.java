@@ -14,6 +14,13 @@ public class Answer {
      */
     private Option choice;
 
+    public Answer() {}
+
+    public Answer(Question question, Option choice) {
+        this.question = question;
+        this.choice = choice;
+    }
+
     public Question getQuestion() {
         return question;
     }

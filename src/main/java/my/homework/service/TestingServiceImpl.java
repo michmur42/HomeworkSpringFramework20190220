@@ -5,6 +5,7 @@ import my.homework.domain.Answer;
 import my.homework.domain.Question;
 import my.homework.exception.StopException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -13,7 +14,6 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Scanner;
 
 @Service
 public class TestingServiceImpl implements TestingService {
@@ -24,7 +24,6 @@ public class TestingServiceImpl implements TestingService {
   private Locale locale;
   private List<Question> questions;
   private MessageService messageService;
-
 
 
   public TestingServiceImpl(@Value("${application.language}") String language,

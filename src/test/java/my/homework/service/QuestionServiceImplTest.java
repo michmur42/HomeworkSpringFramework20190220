@@ -38,13 +38,10 @@ class QuestionServiceImplTest {
     given(messageService.getMessage("prompt.option")).willReturn("prompt.option");
     given(messageService.getMessage("prompt.ask")).willReturn("prompt.ask");
     given(inputService.waitInput()).willReturn("2");
-    Question question = new Question();
-    Option option1 = new Option();
-    option1.setFlag(false);
-    question.getOptions().add(option1);
-    Option option2 = new Option();
-    option2.setFlag(true); //Choice option
-    question.getOptions().add(option2);
+    Question question = Question.Builder.newInstance()
+            .addOption(Option.Builder.newInstance().flag(false).build())
+            .addOption(Option.Builder.newInstance().flag(true).build()) //choice option
+            .build();
     assertTrue(questionService.doAsk(question).getChoice().getFlag(), "Error test doAsk");
   }
 }

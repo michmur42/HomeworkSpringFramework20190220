@@ -2,6 +2,9 @@ package my.homework.domain;
 
 import com.opencsv.bean.CsvBindByPosition;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Вариант ответа
  */
@@ -60,5 +63,48 @@ public class Option {
 
   public void setFlag(Boolean flag) {
     this.flag = flag;
+  }
+
+  public static class Builder {
+
+    private String language;
+    private Integer questionId;
+    private String text;
+    private Boolean flag;
+
+
+    private Builder() {}
+    public static Builder newInstance(){
+      return new Builder();
+    }
+
+    public Builder language(String language) {
+      this.language = language;
+      return this;
+    }
+
+    public Builder id(Integer questionId) {
+      this.questionId = questionId;
+      return this;
+    }
+
+    public Builder text(String textl) {
+      this.text = text;
+      return this;
+    }
+
+    public Builder flag(Boolean flag) {
+      this.flag = flag;
+      return this;
+    }
+
+    public Option build() {
+      Option option = new Option();
+      option.setQuestionId(this.questionId);
+      option.setLanguage(this.language);
+      option.setText(this.text);
+      option.setFlag(this.flag);
+      return option;
+    }
   }
 }

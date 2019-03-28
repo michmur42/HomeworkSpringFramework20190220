@@ -1,17 +1,14 @@
 package my.homework.service;
 
 import my.homework.dao.QuestionDAO;
-import my.homework.domain.Answer;
 import my.homework.domain.Question;
+import my.homework.domain.Result;
 import my.homework.exception.StopException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
-import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -38,22 +35,19 @@ public class TestingServiceImpl implements TestingService {
     this.inputService = inputService;
   }
 
-  public List<Answer> start() throws IOException, StopException {
+  public Result start() throws IOException, StopException {
     this.questions = questionDAO.getQuestions(locale);
     Assert.notEmpty(questions, messageService.getMessage("message.error.data"));
-    String userName = inputService.waitInput(messageService.getMessage("prompt.user"));
-    List<Answer> history = new ArrayList<>();
-    for (Question question : questions) {
-      history.add(questionService.doAsk(question));
+    Result result = new Result();
+    result.setUser(inputService.waitInput(messageService.getMessage("prompt.user")));
+    try {
+      for (Question question : questions) {
+        result.getAnswers().add(questionService.doAsk(question));
+      }
+      System.out.println(messageService.getMessage("message.info.end"));
+    } catch (StopException e) {
+      System.out.println(messageService.getMessage("message.error.stop"));
     }
-    return history;
-  }
-
-  public void validate(List<Answer> history) {
-    long success = history.stream().filter(answer -> answer.getChoice().getFlag()).count();
-    long fail = history.stream().filter(answer -> !answer.getChoice().getFlag()).count();
-    System.out.println();
-    System.out.println(MessageFormat.format(messageService.getMessage("prompt.success"), success));
-    System.out.println(MessageFormat.format(messageService.getMessage("prompt.fail"), fail));
+    return result;
   }
 }
